@@ -1,7 +1,5 @@
 package machine_learning;
 
-import java.util.List;
-
 public class KDTree {
 	// The inner node of kdtree.
 	class TreeNode{
@@ -18,10 +16,17 @@ public class KDTree {
 	
 	// The dimension of data.
 	private int N;
+	// The number of data entries.
+	private int M;
+	// DataSet.
+	private double[][] dataSet;
 	
-	public void buildTree(List<double[]> dataSet){
-		int M = dataSet.size();
-		this.N = dataSet.get(0).length;
-		
+	public void buildTree(double[][] data){
+	}
+	
+	public void initTree(double[][] data){
+		this.M = data.length;
+		this.N = data[0].length;
+		this.dataSet = data;
 	}
 }
