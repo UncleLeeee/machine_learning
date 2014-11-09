@@ -11,21 +11,14 @@ public class KDTree {
 	class KDTreeNode{
 		public KDTreeNode left = null;
 		public KDTreeNode right = null;
-		public KDTreeNode parent = null;
 		public double[] vec = null;
 		public int split_dimension;
+		
+		public int mark = -1;                //0 indicates left, 1 indicates right.
 		
 		public KDTreeNode(double[] v, int split) {
 			this.vec = v;
 			this.split_dimension = split;
-		}
-		
-		public KDTreeNode anotherChild(KDTreeNode n){
-			if(n == left)
-				return right;
-			else if(n == right)
-				return left;
-			return null;
 		}
 		
 		@Override
@@ -89,11 +82,7 @@ public class KDTree {
 		for(int i=middle+1;i<data.size();i++)
 			right_data.add(data.get(i));
 		root.left = buildTree(left_data, (split+1)%N);
-		if(root.left!=null)
-			root.left.parent = root;
 		root.right = buildTree(right_data, (split+1)%N);
-		if(root.right!=null)
-			root.right.parent = root;
 		return root;
 	}
 	
@@ -124,27 +113,35 @@ public class KDTree {
 		KDTreeNode curr = this.rootNode;
 		while(curr!=null){
 			paths.push(curr);
-			if(vec[curr.split_dimension]<=curr.vec[curr.split_dimension])
+			if(vec[curr.split_dimension]<=curr.vec[curr.split_dimension]){
+				curr.mark = 0;
 				curr = curr.left;
-			else
+			}
+			else{
+				curr.mark = 1;
 				curr = curr.right;
+			}
 		}
 		while(!paths.isEmpty()){
 			KDTreeNode node = paths.pop();
-			KDTreeNode parent = node.parent;
+			KDTreeNode upLevel = paths.isEmpty()?null:paths.pop();
 			double dis = MatrixUtils.calcDist(node.vec, vec);
 			if(dis<nearestDistance){
 				nearestDistance = dis;
 				nearestData = node.vec;
 			}
-			if(parent!=null){
-				double disToSplit = Math.abs(vec[parent.split_dimension]-parent.vec[parent.split_dimension]);
+			if(upLevel!=null){
+				dis = MatrixUtils.calcDist(upLevel.vec, vec);
+				if(dis<nearestDistance){
+					nearestDistance = dis;
+					nearestData = node.vec;
+				}
+				double disToSplit = Math.abs(vec[upLevel.split_dimension]-upLevel.vec[upLevel.split_dimension]);
 				if(disToSplit<nearestDistance){
-					KDTreeNode another = parent.anotherChild(node);
+					KDTreeNode another = upLevel.mark == 0?upLevel.right:upLevel.mark == 1?upLevel.left:null;
 					if(another != null)
 						paths.push(another);
 				}
-					
 			}
 		}
 	}
