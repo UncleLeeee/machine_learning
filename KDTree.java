@@ -69,7 +69,7 @@ public class KDTree {
 			public int compare(Pair o1, Pair o2) {
 				double v1 = o1.data_vector[split];
 				double v2 = o2.data_vector[split];
-				return v1<v2?-1:v1==v2?0:1;
+				return v1<=v2?-1:1;
 			}
 		};
 		Collections.sort(data, comparator);
@@ -88,9 +88,15 @@ public class KDTree {
 	
 	/**
 	 * 
+	 */
+	public KDTree(double[][] data) {
+		initTree(data);
+	}
+	/**
+	 * 
 	 * @param data
 	 */
-	public void initTree(double[][] data){
+	private void initTree(double[][] data){
 		this.M = data.length;
 		this.N = data[0].length;
 		this.dataSet = new ArrayList<Pair>();
@@ -106,44 +112,48 @@ public class KDTree {
 	public double nearestDistance;
 	public double[] nearestData;
 	
+	/**
+	 * 
+	 * @Title:        searchNearestRecursively 
+	 * @Description:  TODO 
+	 * @param:        @param vec
+	 * @param:        @param root    
+	 * @return:       void    
+	 * @throws 
+	 */
+	private void searchNearestRecursively(double[] vec, KDTreeNode root){
+		if(root == null)
+			return;
+		int split = root.split_dimension;
+		double dist = MatrixUtils.calcDist(vec, root.vec);
+		if(dist<nearestDistance){
+			nearestDistance = dist;
+			nearestData = root.vec;
+		}
+		if(vec[split]<=root.vec[split])
+			searchNearestRecursively(vec, root.left);
+		else
+			searchNearestRecursively(vec, root.right);
+		if(Math.abs(vec[split]-root.vec[split])<nearestDistance){
+			if(vec[split]<=root.vec[split])
+				searchNearestRecursively(vec, root.right);
+			else
+				searchNearestRecursively(vec, root.left);
+		}
+	}
+	
+	/**
+	 * 
+	 * @Title:        searchNearest 
+	 * @Description:  TODO 
+	 * @param:        @param vec    
+	 * @return:       void    
+	 * @throws 
+	 */
 	public void searchNearest(double[] vec){
 		nearestDistance = Double.MAX_VALUE;
-		nearestData = null; 
-		Stack<KDTreeNode> paths = new Stack<KDTreeNode>();
-		KDTreeNode curr = this.rootNode;
-		while(curr!=null){
-			paths.push(curr);
-			if(vec[curr.split_dimension]<=curr.vec[curr.split_dimension]){
-				curr.mark = 0;
-				curr = curr.left;
-			}
-			else{
-				curr.mark = 1;
-				curr = curr.right;
-			}
-		}
-		while(!paths.isEmpty()){
-			KDTreeNode node = paths.pop();
-			KDTreeNode upLevel = paths.isEmpty()?null:paths.pop();
-			double dis = MatrixUtils.calcDist(node.vec, vec);
-			if(dis<nearestDistance){
-				nearestDistance = dis;
-				nearestData = node.vec;
-			}
-			if(upLevel!=null){
-				dis = MatrixUtils.calcDist(upLevel.vec, vec);
-				if(dis<nearestDistance){
-					nearestDistance = dis;
-					nearestData = node.vec;
-				}
-				double disToSplit = Math.abs(vec[upLevel.split_dimension]-upLevel.vec[upLevel.split_dimension]);
-				if(disToSplit<nearestDistance){
-					KDTreeNode another = upLevel.mark == 0?upLevel.right:upLevel.mark == 1?upLevel.left:null;
-					if(another != null)
-						paths.push(another);
-				}
-			}
-		}
+		nearestData = null;
+		searchNearestRecursively(vec, rootNode);
 	}
 	/**
 	 * 
@@ -159,14 +169,15 @@ public class KDTree {
 	}
 	
 	public static void main(String[] args) {
-		double[][] data = {{2., 3.}, {5.,4.},{9.,6.},{4.,7.},{8.,1.},{7.,2.}};
-		KDTree kd = new KDTree();
-		kd.initTree(data);
+		double[][] data = {{2., 0.}, {6.5,4.},{9.,6.},{4.,117.},{8.,5},{7.,2.}};
+		KDTree kd = new KDTree(data);
 		KDTreeNode root = kd.getRootNode();
-		double[] vec = {3,4.5};
+		double[] vec = {3,23};
 		kd.searchNearest(vec);
 		double res = kd.nearestDistance;
 		double[] d = kd.nearestData;
-		System.out.println(root);
+		System.out.println(res);
+		for(int i=0;i<d.length;i++)
+			System.out.print(" "+d[i]);
 	}
 }
