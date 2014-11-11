@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Stack;
 
 public class KDTree {
 	// The inner node of kdtree.
@@ -13,8 +12,6 @@ public class KDTree {
 		public KDTreeNode right = null;
 		public double[] vec = null;
 		public int split_dimension;
-		
-		public int mark = -1;                //0 indicates left, 1 indicates right.
 		
 		public KDTreeNode(double[] v, int split) {
 			this.vec = v;
@@ -171,7 +168,6 @@ public class KDTree {
 	public static void main(String[] args) {
 		double[][] data = {{2., 0.}, {6.5,4.},{9.,6.},{4.,117.},{8.,5},{7.,2.}};
 		KDTree kd = new KDTree(data);
-		KDTreeNode root = kd.getRootNode();
 		double[] vec = {3,23};
 		kd.searchNearest(vec);
 		double res = kd.nearestDistance;
