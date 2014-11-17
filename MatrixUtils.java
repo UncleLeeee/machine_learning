@@ -88,4 +88,12 @@ public class MatrixUtils {
 		}
 		return ret;
 	}
+	
+	public static double vectorDotMultiply(double[] a1, double[] a2){
+		double res = 0.;
+		for(int i=0;i<a1.length;i++){
+			res += a1[i]*a2[i];
+		}
+		return res;
+	}
 }
