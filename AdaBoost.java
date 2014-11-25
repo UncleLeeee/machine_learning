@@ -31,6 +31,18 @@ public class AdaBoost {
 		}
 	}
 	
+	public int test(double[] data_vec){
+		double output = 0.0;
+		for(DecisionStump stump:classifiers){
+			int curr_val = stump.classify(data_vec);
+			output = stump.alpha*(double)curr_val;
+		}
+		if(output>0)
+			return 1;
+		else
+			return -1;
+	}
+	
 	private void updateWeight(List<DataEntry<double[]>> data_set, DecisionStump curr_stump){
 		int M = data_set.size();
 		double[] data_cache = new double[M];
