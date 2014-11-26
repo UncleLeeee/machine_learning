@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LogisticRegressionTest {
+	public static String file_name = "C:\\Users\\UncleLee\\Desktop\\myProject\\MLiA_SourceCode\\Ch05\\testSet.txt";
 
 	public static void main(String[] args) throws FileNotFoundException {
-		Scanner scanner = new Scanner(new File("C:\\Users\\UncleLee\\Desktop\\myProject\\MLiA_SourceCode\\Ch05\\testSet.txt"));
+		Scanner scanner = new Scanner(new File(file_name));
 		List<DataEntry<double[]>> data_set = new ArrayList<DataEntry<double[]>>();
 		while(scanner.hasNext()){
 			double[] data = new double[3];

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AdaBoost {
-	public static double MIN_VALUE = 1e-10;
+	public static double MIN_VALUE = 1e-16;
 	public int N;							// dimension of the data.
 	public List<DecisionStump> classifiers;	// classifiers.
 	public double[] weight;					// the weight of training samples.
@@ -35,9 +35,9 @@ public class AdaBoost {
 		double output = 0.0;
 		for(DecisionStump stump:classifiers){
 			int curr_val = stump.classify(data_vec);
-			output = stump.alpha*(double)curr_val;
+			output += stump.alpha*(double)curr_val;
 		}
-		if(output>0)
+		if(output>0.0)
 			return 1;
 		else
 			return -1;
@@ -47,6 +47,8 @@ public class AdaBoost {
 		int M = data_set.size();
 		double[] data_cache = new double[M];
 		int[] labels = new int[M];
+		for(int i=0;i<M;i++)
+			labels[i] = data_set.get(i).label;
 		int[] pred_labels = curr_stump.predict_val;
 		double alpha = curr_stump.alpha;
 		double sum = 0.0;
