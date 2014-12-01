@@ -15,7 +15,7 @@ public class AdaBoost {
 	 * @param data_set
 	 * @param num_of_classifier
 	 */
-	public void train(List<DataEntry<double[]>> data_set, int num_of_classifier){
+	public void train(List<DataEntry<double[], Integer>> data_set, int num_of_classifier){
 		int M = data_set.size();
 		this.classifiers = new ArrayList<DecisionStump>();
 		this.N = data_set.get(0).data_vec.length;
@@ -43,7 +43,7 @@ public class AdaBoost {
 			return -1;
 	}
 	
-	private void updateWeight(List<DataEntry<double[]>> data_set, DecisionStump curr_stump){
+	private void updateWeight(List<DataEntry<double[], Integer>> data_set, DecisionStump curr_stump){
 		int M = data_set.size();
 		double[] data_cache = new double[M];
 		int[] labels = new int[M];
@@ -94,7 +94,7 @@ class DecisionStump{
 	 * @param is_less
 	 * @return
 	 */
-	public static int[] batchClassify(List<DataEntry<double[]>> data_set, int d, double val, boolean is_less){
+	public static int[] batchClassify(List<DataEntry<double[], Integer>> data_set, int d, double val, boolean is_less){
 		int M = data_set.size();
 		int[] ret_labels = new int[M];
 		for(int i=0;i<M;i++){
@@ -113,7 +113,7 @@ class DecisionStump{
 	 * @param weight
 	 * @return
 	 */
-	public static DecisionStump buildStump(List<DataEntry<double[]>> data_set, double[] weight){
+	public static DecisionStump buildStump(List<DataEntry<double[], Integer>> data_set, double[] weight){
 		int M = data_set.size();
 		int N = data_set.get(0).data_vec.length;
 		int[] labels = new int[M];
@@ -132,7 +132,7 @@ class DecisionStump{
 			}
 			double step_size = (max-min)/(double)STEPS;
 			double curr_val = min;
-			for(int i=0;i<step_size;i++,curr_val+=step_size){
+			for(int i=0;i<STEPS;i++,curr_val+=step_size){
 				boolean is_less = true;
 				for(int ii=0;ii<2;ii++,is_less = !is_less){
 					int[] pred_labels = batchClassify(data_set, d, curr_val, is_less);
@@ -154,5 +154,4 @@ class DecisionStump{
 		}
 		return ret_stump;
 	}
-	
 }

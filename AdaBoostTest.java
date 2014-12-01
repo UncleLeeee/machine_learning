@@ -12,19 +12,19 @@ public class AdaBoostTest {
 	
 	public static AdaBoost classifier = new AdaBoost();
 	
-	public static List<DataEntry<double[]>> readFile(String file_name){
-		List<DataEntry<double[]>> data_set = null;
+	public static List<DataEntry<double[], Integer>> readFile(String file_name){
+		List<DataEntry<double[], Integer>> data_set = null;
 		Scanner scanner;
 		try {
 			scanner = new Scanner(new File(file_name));
-			data_set = new ArrayList<DataEntry<double[]>>();
+			data_set = new ArrayList<DataEntry<double[], Integer>>();
 			while(scanner.hasNext()){
 				String[] one_line = scanner.nextLine().split("\t");
 				double[] data_vec = new double[one_line.length-1];
 				for(int i=0;i<one_line.length-1;i++)
 					data_vec[i] = Double.parseDouble(one_line[i]);
 				int label = (int)Double.parseDouble(one_line[one_line.length-1]);
-				DataEntry<double[]> data_entry = new DataEntry<double[]>(data_vec, label);
+				DataEntry<double[], Integer> data_entry = new DataEntry<double[], Integer>(data_vec, label);
 				data_set.add(data_entry);
 			}
 		} catch (FileNotFoundException e) {
@@ -34,12 +34,12 @@ public class AdaBoostTest {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		List<DataEntry<double[]>> training_set = readFile(training_file);
-		classifier.train(training_set, 10);
-		List<DataEntry<double[]>> testing_set = readFile(testing_file);
+		List<DataEntry<double[], Integer>> training_set = readFile(training_file);
+		classifier.train(training_set, 100);
+		List<DataEntry<double[], Integer>> testing_set = readFile(testing_file);
 		int right = 0;
 		int all = testing_set.size();
-		for(DataEntry<double[]> data:testing_set){
+		for(DataEntry<double[], Integer> data:testing_set){
 			int pred_label = classifier.test(data.data_vec);
 			if(pred_label == data.label)
 				right++;

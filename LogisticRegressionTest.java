@@ -11,24 +11,22 @@ public class LogisticRegressionTest {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new File(file_name));
-		List<DataEntry<double[]>> data_set = new ArrayList<DataEntry<double[]>>();
+		List<DataEntry<double[], Double>> data_set = new ArrayList<DataEntry<double[], Double>>();
 		while(scanner.hasNext()){
 			double[] data = new double[3];
 			data[0] = 1.0;
 			data[1] = scanner.nextDouble();
 			data[2] = scanner.nextDouble();
-			DataEntry<double[]> entry = new DataEntry<double[]>(data, scanner.nextInt());
+			DataEntry<double[], Double> entry = new DataEntry<double[], Double>(data, (double)scanner.nextInt());
 			data_set.add(entry);
 		}
 		
-		LogisticRegression r = new LogisticRegression(data_set,true);
-		double[] params = r.theta;
+		LogisticRegression r = new LogisticRegression(data_set,false);
 		int right = 0;
 		for(int i=0;i<data_set.size();i++){
 			double[] vec = data_set.get(i).data_vec;
-			int label = data_set.get(i).label;
-			double res = GeneralFunction.sigmoid(MatrixUtils.vectorDotMultiply(vec, params));
-			int nLabel = res<0.5?0:1;
+			int label = (int)(double)data_set.get(i).label;
+			int nLabel = r.test(vec);
 			if(label == nLabel)
 				right++;
 		}

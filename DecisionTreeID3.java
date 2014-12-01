@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 public class DecisionTreeID3 {
 
-	public static int calcMajority(List<DataEntry<int[]>> data_set){
+	public static int calcMajority(List<DataEntry<int[], Integer>> data_set){
 		int max = 0;
 		int len = data_set.size();
 		Map<Integer, Integer> counter = new HashMap<Integer, Integer>();
@@ -29,7 +29,7 @@ public class DecisionTreeID3 {
 		return max;
 	}
 	
-	public static double calcEntropy(List<DataEntry<int[]>> data_set){
+	public static double calcEntropy(List<DataEntry<int[], Integer>> data_set){
 		double entropy = 0.;
 		int all = data_set.size();
 		Map<Integer, Integer> counter = new HashMap<Integer, Integer>();
@@ -59,9 +59,9 @@ public class DecisionTreeID3 {
 		}
 	}
 	
-	private List<DataEntry<int[]>> splitData(List<DataEntry<int[]>> data_set, int index, int value){
-		List<DataEntry<int[]>> split_data = new ArrayList<DataEntry<int[]>>();
-		for(DataEntry<int[]> data_entry:data_set){
+	private List<DataEntry<int[], Integer>> splitData(List<DataEntry<int[], Integer>> data_set, int index, int value){
+		List<DataEntry<int[], Integer>> split_data = new ArrayList<DataEntry<int[], Integer>>();
+		for(DataEntry<int[], Integer> data_entry:data_set){
 			if(data_entry.data_vec[index] == value)
 				split_data.add(data_entry);
 		}
@@ -73,7 +73,7 @@ public class DecisionTreeID3 {
 	public int M;
 	public int N;
 	
-	private int chooseBestFeature(List<DataEntry<int[]>> data_set){
+	private int chooseBestFeature(List<DataEntry<int[], Integer>> data_set){
 		int all = data_set.size();
 		int best_feature = 0;
 		double curr_entropy = calcEntropy(data_set);
@@ -84,7 +84,7 @@ public class DecisionTreeID3 {
 			Set<Integer> unique_value = getUniqueValue(data_set, i);
 			double this_entropy = 0.;
 			for(Integer val:unique_value){
-				List<DataEntry<int[]>> split_data = splitData(data_set, i, val);
+				List<DataEntry<int[], Integer>> split_data = splitData(data_set, i, val);
 				double prob = (double)(split_data.size())/(double)all;
 				this_entropy += calcEntropy(split_data)*prob;
 			}
@@ -96,15 +96,15 @@ public class DecisionTreeID3 {
 		return best_feature;
 	}
 	
-	private Set<Integer> getUniqueValue(List<DataEntry<int[]>> data_set, int index){
+	private Set<Integer> getUniqueValue(List<DataEntry<int[], Integer>> data_set, int index){
 		Set<Integer> set = new HashSet<Integer>();
-		for(DataEntry<int[]> data_entry:data_set){
+		for(DataEntry<int[], Integer> data_entry:data_set){
 			set.add(data_entry.data_vec[index]);
 		}
 		return set;
 	}
 	
-	private DecisionNode buildTree(List<DataEntry<int[]>> data_set){
+	private DecisionNode buildTree(List<DataEntry<int[], Integer>> data_set){
 		DecisionNode root = new DecisionNode(-1, false);
 		boolean is_uniformed = true;
 		for(int i=1;i<data_set.size();i++){
@@ -137,7 +137,7 @@ public class DecisionTreeID3 {
 	}
 	
 	public DecisionNode root = null;
-	public DecisionTreeID3(List<DataEntry<int[]>> data_set) {
+	public DecisionTreeID3(List<DataEntry<int[], Integer>> data_set) {
 		this.M = data_set.size();
 		this.N = data_set.get(0).data_vec.length;
 		this.marked = new boolean[N];
@@ -161,9 +161,9 @@ public class DecisionTreeID3 {
 	public static void main(String[] args) {
 		int[][] input_vec = {{1,1},{1,1},{1,0},{0,1},{0,1}};
 		int[] label = {1,1,0,0,0};
-		List<DataEntry<int[]>> data_set = new ArrayList<DataEntry<int[]>>();
+		List<DataEntry<int[], Integer>> data_set = new ArrayList<DataEntry<int[], Integer>>();
 		for(int i=0;i<input_vec.length;i++){
-			DataEntry<int[]> entry = new DataEntry<int[]>(input_vec[i],label[i]);
+			DataEntry<int[], Integer> entry = new DataEntry<int[], Integer>(input_vec[i],label[i]);
 			data_set.add(entry);
 		}
 		DecisionTreeID3 tree = new DecisionTreeID3(data_set);
