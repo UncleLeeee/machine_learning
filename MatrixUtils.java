@@ -61,15 +61,15 @@ public class MatrixUtils {
 	 * @throws 
 	 * @author        UncleLee
 	 */
-	public static double[] matrixMeanAndVariance(List<double[]> dataSet, int index, int axis){
+	public static double[] matrixMeanAndVariance(List<DataEntry<double[], Double>> dataSet, int index, int axis){
 		double[] ret = new double[2];
 		ret[0] = 0.0;
 		ret[1] = 0.0;
 		int m = dataSet.size();
-		int n = dataSet.get(0).length;
+		int n = dataSet.get(0).data_vec.length;
 		if(axis == 0){
 			for(int i=0;i<m;i++){
-				double val = dataSet.get(i)[index];
+				double val = index == -1?(double)dataSet.get(i).label:dataSet.get(i).data_vec[index];
 				ret[0] += val;
 				ret[1] += val*val;
 			}
@@ -78,7 +78,7 @@ public class MatrixUtils {
 			ret[1] -= ret[0]*ret[0];
 		}else{
 			for(int i=0;i<n;i++){
-				double val = dataSet.get(index)[i];
+				double val = dataSet.get(index).data_vec[i];
 				ret[0] += val;
 				ret[1] += val*val;
 			}
@@ -89,6 +89,17 @@ public class MatrixUtils {
 		return ret;
 	}
 	
+	/**
+	 * 
+	 * @Title:        vectorDotMultiply 
+	 * @Description:  TODO 
+	 * @param:        @param a1
+	 * @param:        @param a2
+	 * @param:        @return    
+	 * @return:       double    
+	 * @throws 
+	 * @author        UncleLee
+	 */
 	public static double vectorDotMultiply(double[] a1, double[] a2){
 		double res = 0.;
 		for(int i=0;i<a1.length;i++){
