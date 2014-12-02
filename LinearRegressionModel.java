@@ -9,10 +9,13 @@ public abstract class LinearRegressionModel<T> {
 	public int N;                 // dimension.
 	public int M;                 // number of samples.
 	public double[] theta;        //parameters.
+	public double 
 	
 	protected LinearCalculator calculator;
 	
 	public abstract T test(double[] data);
+	
+	public abstract T[] batchTest(List<DataEntry<double[], Double>> data_set);
 	
 	public LinearRegressionModel(List<DataEntry<double[], Double>> data_set, boolean isBGD, LinearCalculator calc) {
 		this.calculator = calc;

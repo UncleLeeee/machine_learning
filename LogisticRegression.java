@@ -18,4 +18,15 @@ public class LogisticRegression extends LinearRegressionModel<Integer> {
 		double res = this.calculator.calc(data, theta);
 		return res<0.5?0:1;
 	}
+
+	@Override
+	public Integer[] batchTest(List<DataEntry<double[], Double>> data_set) {
+		int m = data_set.size();
+		Integer[] labels = new Integer[m];
+		for(int i=0;i<m;i++){
+			double res = this.calculator.calc(data_set.get(i).data_vec, theta);
+			labels[i] = res<0.5?0:1;
+		}
+		return labels;
+	}
 }
