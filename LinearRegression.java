@@ -24,4 +24,22 @@ public class LinearRegression extends LinearRegressionModel<Double> {
 		return labels;
 	}
 
+	@Override
+	protected double calcError(List<DataEntry<double[], Double>> data_set) {
+		double mean = 0.0;
+		int m = data_set.size();
+		for(int i=0;i<m;i++){
+			mean += data_set.get(i).label;
+		}
+		mean /= m;
+		double pred_var = 0.0;
+		double orig_var = 0.0;
+		Double[] pred_labels = batchTest(data_set);
+		for(int i=0;i<m;i++){
+			pred_var += Math.pow((pred_labels[i]-mean), 2);
+			orig_var += Math.pow((data_set.get(i).label-mean), 2);
+		}
+		return (pred_var/orig_var);
+	}
+
 }

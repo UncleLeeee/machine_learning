@@ -29,4 +29,16 @@ public class LogisticRegression extends LinearRegressionModel<Integer> {
 		}
 		return labels;
 	}
+
+	@Override
+	protected double calcError(List<DataEntry<double[], Double>> data_set) {
+		int m = data_set.size();
+		int right = 0;
+		Integer[] pred_labels = batchTest(data_set);
+		for(int i=0;i<m;i++){
+			if(pred_labels[i].equals(data_set.get(i).label))
+				right ++;
+		}
+		return (double)right/(double)m;
+	}
 }

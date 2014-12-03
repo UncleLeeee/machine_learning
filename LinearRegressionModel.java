@@ -6,16 +6,18 @@ import java.util.Random;
 public abstract class LinearRegressionModel<T> {
 	public static int MAX_ITER_TIMES = 500;
 	public static double BASE_ALPHA = 0.01;
-	public int N;                 // dimension.
-	public int M;                 // number of samples.
-	public double[] theta;        //parameters.
-	public double 
+	public int N;                 	// dimension.
+	public int M;					// number of samples.
+	public double[] theta;			//parameters.
+	public double error_rate;		//error rate.
 	
 	protected LinearCalculator calculator;
 	
 	public abstract T test(double[] data);
 	
 	public abstract T[] batchTest(List<DataEntry<double[], Double>> data_set);
+	
+	protected abstract double calcError(List<DataEntry<double[], Double>> data_set);
 	
 	public LinearRegressionModel(List<DataEntry<double[], Double>> data_set, boolean isBGD, LinearCalculator calc) {
 		this.calculator = calc;
@@ -26,6 +28,7 @@ public abstract class LinearRegressionModel<T> {
 			batchGradientDescend(data_set);
 		else
 			stochasticGradientDescend(data_set);
+		this.error_rate = calcError(data_set);
 	}
 	
 	/**
