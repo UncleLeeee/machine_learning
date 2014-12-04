@@ -25,7 +25,7 @@ public class LinearRegression extends LinearRegressionModel<Double> {
 	}
 
 	@Override
-	protected double calcError(List<DataEntry<double[], Double>> data_set) {
+	protected void calcError(List<DataEntry<double[], Double>> data_set) {
 		double mean = 0.0;
 		int m = data_set.size();
 		for(int i=0;i<m;i++){
@@ -36,10 +36,11 @@ public class LinearRegression extends LinearRegressionModel<Double> {
 		double orig_var = 0.0;
 		Double[] pred_labels = batchTest(data_set);
 		for(int i=0;i<m;i++){
-			pred_var += Math.pow((pred_labels[i]-mean), 2);
+			pred_var += Math.pow((pred_labels[i]-data_set.get(i).label), 2);
 			orig_var += Math.pow((data_set.get(i).label-mean), 2);
 		}
-		return (pred_var/orig_var);
+		this.fitness = (1.0 - pred_var/orig_var);
+		this.error_sum = pred_var;
 	}
 
 }

@@ -8,8 +8,9 @@ public abstract class LinearRegressionModel<T> {
 	public static double BASE_ALPHA = 0.01;
 	public int N;                 	// dimension.
 	public int M;					// number of samples.
-	public double[] theta;			//parameters.
-	public double error_rate;		//error rate.
+	public double[] theta;			// parameters.
+	public double fitness;			// fitness of the model.
+	public double error_sum;		// error_sum of the model.
 	
 	protected LinearCalculator calculator;
 	
@@ -17,7 +18,7 @@ public abstract class LinearRegressionModel<T> {
 	
 	public abstract T[] batchTest(List<DataEntry<double[], Double>> data_set);
 	
-	protected abstract double calcError(List<DataEntry<double[], Double>> data_set);
+	protected abstract void calcError(List<DataEntry<double[], Double>> data_set);
 	
 	public LinearRegressionModel(List<DataEntry<double[], Double>> data_set, boolean isBGD, LinearCalculator calc) {
 		this.calculator = calc;
@@ -28,7 +29,7 @@ public abstract class LinearRegressionModel<T> {
 			batchGradientDescend(data_set);
 		else
 			stochasticGradientDescend(data_set);
-		this.error_rate = calcError(data_set);
+		calcError(data_set);
 	}
 	
 	/**

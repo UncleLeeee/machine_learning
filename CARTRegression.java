@@ -16,8 +16,9 @@ public class CARTRegression{
 		}
 	}
 	
-	public static int DEFAULT_MIN_NUMS = 5;			// if the size of dataset is less than this value, then stop split.
-	public static double MIN_TOLERANCE = 0.95;		// if the accuracy is larger than this value, then stop split.
+	public static int DEFAULT_MIN_NUMS = 10;			// if the size of dataset is less than this value, then stop split.
+	public static double MIN_TOLERANCE = 0.98;			// if the accuracy is larger than this value, then stop split.
+	public static double MIN_INCREMENT_RATE = 0.80;
 	
 	private CARTNode<Double> root;
 	
@@ -57,7 +58,7 @@ public class CARTRegression{
 	 * @throws 
 	 * @author        UncleLee
 	 */
-	private SplitPair chooseBestFeature(List<DataEntry<double[], Double>> data_set){
+	private SplitPair chooseBestFeature(List<DataEntry<double[], Double>> data_set, double error_sum){
 		int m = data_set.size();
 		if(m <= DEFAULT_MIN_NUMS)
 			return null;
@@ -76,11 +77,11 @@ public class CARTRegression{
 				List<DataEntry<double[], Double>>[] temp_data = binSplitData(data_set, sp);
 				if(temp_data[0].size()>0){
 					LinearRegressionModel<Double> left =  new LinearRegression(temp_data[0], false);
-					error += left.error_rate;
+					error += left.error_sum;
 				}
 				if(temp_data[1].size()>0){
 					LinearRegressionModel<Double> right =  new LinearRegression(temp_data[1], false);
-					error += right.error_rate;
+					error += right.error_sum;
 				}
 				if(error<min_error){
 					best_sp = sp;
@@ -88,6 +89,8 @@ public class CARTRegression{
 				}
 			}
 		}
+		if(min_error/error_sum>MIN_INCREMENT_RATE)
+			return null;
 		return best_sp;
 	}
 	
@@ -105,10 +108,10 @@ public class CARTRegression{
 		CARTNode<Double> node = new CARTNode<Double>();
 		LinearRegressionModel<Double> this_model = new LinearRegression(data_set, false);
 		node.model = this_model;
-		if(this_model.error_rate>=MIN_TOLERANCE){
+		if(this_model.fitness>=MIN_TOLERANCE){
 			return node;
 		}
-		SplitPair sp = chooseBestFeature(data_set);
+		SplitPair sp = chooseBestFeature(data_set, this_model.error_sum);
 		if(sp == null)
 			return node;
 		List<DataEntry<double[], Double>>[] temp_data = binSplitData(data_set, sp);
