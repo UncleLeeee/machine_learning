@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LogisticRegressionTest {
-	public static String file_name = "C:\\Users\\UncleLee\\Desktop\\myProject\\MLiA_SourceCode\\Ch05\\testSet.txt";
+	public static String file_name = "/home/lee/MLiA_SourceCode/Ch05/testSet.txt";
 
 	public static void main(String[] args) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new File(file_name));

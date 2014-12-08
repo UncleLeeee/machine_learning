@@ -38,9 +38,10 @@ public class GDA {
 			for(int i=0;i<N;i++)
 				data[0][i] = entry.data_vec[i] - this.mean[entry.label][i];
 			SimpleMatrix curr_matrix = new SimpleMatrix(data);
-			var_transpose.plus(curr_matrix.transpose().mult(curr_matrix));
+			SimpleMatrix temp = curr_matrix.transpose().mult(curr_matrix);
+			var_transpose = var_transpose.plus(temp);
 		}
-		var_transpose.scale(1./(double)(m));
+		var_transpose = var_transpose.scale(1./(double)(m));
 		this.var_transpose = var_transpose.invert();
 	}
 	
